@@ -39,7 +39,9 @@ namespace ExtendedHubClient
         {
             Logger = logger ?? NullLogger.Instance;
             ProxyCreator = proxyCreator ?? new DefaultProxyCreator();
-            Methods = new MethodRegistrationManager(Hub, CommandReceived); 
+            
+            Methods = new MethodRegistrationManager(Hub, CommandReceived);
+            Methods.RegisterMethods(MethodType.Send, typeof(T));
             
             MethodHolder = new DefaultMethodHolder(Hub, Methods);
 
