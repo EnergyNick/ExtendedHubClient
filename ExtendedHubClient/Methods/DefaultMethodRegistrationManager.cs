@@ -13,15 +13,15 @@ namespace ExtendedHubClient.Methods
     public class MethodRegistrationManager : IMethodRegistrationManager
     {
         private readonly HubConnection _hubConnection;
-        private readonly OnHubReceiveDelegate _onHubReceive;
+        private readonly OnHubReceiveDelegate _onHubReceiveMethod;
 
         public MethodRegistrationManager(
             HubConnection hubConnection,
-            OnHubReceiveDelegate onHubReceive
+            OnHubReceiveDelegate onHubReceiveMethod
             )
         {
             _hubConnection = hubConnection;
-            _onHubReceive = onHubReceive;
+            _onHubReceiveMethod = onHubReceiveMethod;
             
             _sendMethods = new ConcurrentDictionary<string, MethodView>();
             _receiveMethods = new ConcurrentDictionary<string, MethodView>();
@@ -68,7 +68,7 @@ namespace ExtendedHubClient.Methods
                 case MethodType.Receive:
                 {
                     _receiveMethods.TryAdd(name, methodView);
-                    _hubConnection.On(name, methodView.Arguments, response => _onHubReceive(name, response));
+                    _hubConnection.On(name, methodView.Arguments, response => _onHubReceiveMethod(name, response));
                     break;
                 }
             }
