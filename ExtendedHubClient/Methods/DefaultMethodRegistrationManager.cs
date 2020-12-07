@@ -83,13 +83,13 @@ namespace ExtendedHubClient.Methods
             if (!methodProvider.TryGetValue(methodName, out var view))
             {
                 errorReason = $"Can't find registered method \"{methodName}\"";
-                return true;
+                return false;
             }
 
             if (view.Arguments.Length != methodArgs.Count)
             {
                 errorReason = $"Mismatch in the number of input arguments for the method \"{methodName}\"";
-                return true;
+                return false;
             }
             
             for (var i = 0; i < methodArgs.Count; i++)
@@ -100,11 +100,11 @@ namespace ExtendedHubClient.Methods
                 if (dtoType == argType) continue;
                 
                 errorReason = $"Type mismatch on {i + 1} argument when try to call method \"{methodName}\"";
-                return true;
+                return false;
             }
 
             errorReason = null;
-            return false;
+            return true;
         }
 
         private static void VerifyMethodView(MethodType type, MethodView methodView)
