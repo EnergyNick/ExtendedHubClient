@@ -7,12 +7,20 @@ namespace ExtendedHubClient.Proxy.Interceptors
     public class InterceptorWrapper : IInterceptorWrapper
     {
         private IMethodHolder _holder;
+        
+        private readonly object _locker = new object();
 
         public void Intercept(IInvocation invocation)
         {
-            lock (_holder)
+            if(invocation == null)
+                throw new ArgumentNullException(nameof(invocation));
+
+            if(_holder == null)
+                throw new NullReferenceException($"Can't invoke without attached {nameof(IMethodHolder)}");
+            
+            lock (_locker)
             {
-                var name = invocation?.Method.Name ?? throw new ArgumentNullException(nameof(invocation));
+                var name = invocation?.Method.Name;
                 var arguments = invocation.Arguments;
                 _holder.OnMethodInvoke(name, arguments).GetAwaiter().GetResult();
             }
@@ -20,7 +28,7 @@ namespace ExtendedHubClient.Proxy.Interceptors
 
         public void AttachMethodHolder(IMethodHolder holder)
         {
-            lock (_holder)
+            lock (_locker)
             {
                 _holder = holder ?? throw new ArgumentNullException(nameof(holder));
             }
