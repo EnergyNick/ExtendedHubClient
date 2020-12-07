@@ -40,12 +40,12 @@ namespace ExtendedHubClient
             Logger = logger ?? NullLogger.Instance;
             ProxyCreator = proxyCreator ?? new DefaultProxyCreator();
             
+            Hub = CreateAndConfigureHub(url, connectionConfiguration, additionalHubConfiguration);
+
             Methods = new MethodRegistrationManager(Hub, CommandReceived);
             Methods.RegisterMethods(MethodType.Send, typeof(T));
-            
-            MethodHolder = new DefaultMethodHolder(Hub, Methods);
 
-            Hub = CreateAndConfigureHub(url, connectionConfiguration, additionalHubConfiguration);
+            MethodHolder = new DefaultMethodHolder(Hub, Methods);
         }
 
         public async Task<bool> TryOpenConnection(CancellationToken cancellationToken = default)
