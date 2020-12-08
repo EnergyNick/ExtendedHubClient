@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace ExtendedHubClient.Abstractions.Methods
 {
+    /// <summary>
+    /// Provides basic information about the method.
+    /// </summary>
     public class MethodView : IEquatable<MethodView>
     {
         public string Name { get; }

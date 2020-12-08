@@ -10,6 +10,9 @@ namespace ExtendedHubClient.Abstractions
     /// </summary>
     public interface IHubClient: IAsyncDisposable
     {
+        /// <summary>
+        /// Shows the server connection status.
+        /// </summary>
         bool IsActive { get; }
         
         ISendMethodProxy Server { get; }
@@ -17,8 +20,12 @@ namespace ExtendedHubClient.Abstractions
         IMethodsManager Methods { get; }
         
         Task<bool> TryOpenConnection(CancellationToken cancellationToken = default);
+        
         Task CloseConnection(CancellationToken cancellationToken = default);
         
+        /// <summary>
+        /// The event, which receives the call based on the registered methods.
+        /// </summary>
         event OnHubReceiveDelegate OnCommandReceive;
     }
 }
