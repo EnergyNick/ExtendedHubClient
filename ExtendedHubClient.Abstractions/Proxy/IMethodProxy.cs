@@ -7,7 +7,7 @@ namespace ExtendedHubClient.Abstractions.Proxy
     /// <summary>
     /// Represents a simplification of the called method for sending a message via <see cref="HubConnection"/>
     /// </summary>
-    public interface IMethodHolder
+    public interface IMethodProxy
     {
         public Task OnMethodInvoke(string name, IEnumerable<object> arguments);
     }

@@ -5,6 +5,6 @@
     /// </summary>
     public interface IProxyCreator
     {
-        TInterface CreateProxyForInterface<TInterface>(IMethodHolder holder) where TInterface: class;
+        TInterface CreateProxyForInterface<TInterface>(IMethodProxy methodProxy) where TInterface: class;
     }
 }
