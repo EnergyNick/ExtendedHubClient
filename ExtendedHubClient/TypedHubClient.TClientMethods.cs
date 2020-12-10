@@ -10,27 +10,34 @@ using Microsoft.Extensions.Logging;
 namespace ExtendedHubClient
 {
     /// <summary>
-    /// Provide default realization of <see cref="IHubClient"/>.
+    /// Provide default realization of <see cref="ITypedHubClient{TServerMethods}"/>.
+    /// Client methods from <see cref="TClientMethods"/> can only return a Task.
     /// </summary>
-    public class HubClient : BaseHubClient
+    /// <typeparam name="TServerMethods">Interface that provides a view similar to server methods</typeparam>
+    /// <typeparam name="TClientMethods">Interface that provides a view similar to the client's methods</typeparam>
+    public class TypedHubClient<TServerMethods, TClientMethods> : BaseHubClient
+        where TServerMethods: class
+        where TClientMethods: class
     {
+        public new TServerMethods Server => ProxyCreator.CreateProxyForInterface<TServerMethods>(MethodProxy);
+        
         protected override IProxyCreator ProxyCreator { get; }
         protected override IMethodProxy MethodProxy { get; }
 
-        public HubClient(string url,
+        public TypedHubClient(string url,
             Action<HttpConnectionOptions> connectionConfiguration = null,
             Action<IHubConnectionBuilder> additionalHubConfiguration = null,
             ILogger logger = null
             )
             : base(url,
                 (hub, hubMethod) => 
-                    new DefaultMethodManager(hub, hubMethod, typeof(ISendMethodProxy), null),
+                    new DefaultMethodManager(hub, hubMethod, typeof(TServerMethods), typeof(TClientMethods)),
                 connectionConfiguration,
                 additionalHubConfiguration,
                 logger)
         {
             MethodProxy = new DefaultMethodProxy(Hub, Methods);
-            ProxyCreator = new DefaultProxyCreator();
+            ProxyCreator = new DefaultTypedProxyCreator();
         }
     }
 }
