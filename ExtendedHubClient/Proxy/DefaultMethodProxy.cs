@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ExtendedHubClient.Proxy
 {
-    public class DefaultMethodHolder : IMethodHolder
+    public class DefaultMethodProxy : IMethodProxy
     {
         private readonly HubConnection _hub;
-        private readonly IMethodRegistrationManager _manager;
+        private readonly IMethodsManager _manager;
 
-        public DefaultMethodHolder(HubConnection hub, IMethodRegistrationManager manager)
+        public DefaultMethodProxy(HubConnection hub, IMethodsManager manager)
         {
             _hub = hub;
             _manager = manager;
@@ -22,9 +22,10 @@ namespace ExtendedHubClient.Proxy
         public async Task OnMethodInvoke(string name, IEnumerable<object> arguments)
         {
             var args = arguments?.ToArray() ?? new object[0];
-        
-            if(!_manager.IsMethodContainsInRegistration(name, args, MethodType.Send, out var reason))
-                throw new ArgumentException(reason);
+
+            if (!_manager.CanArgumentsCallMethodFromRegistration(MethodType.Send, name, args))
+                throw new ArgumentException(
+                    $"Can't call method {name} with arguments: {string.Join(", ", args.Select(x => x?.ToString()))}");
 
             await _hub.SendCoreAsync(name, args).ConfigureAwait(false);
         }

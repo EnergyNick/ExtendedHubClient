@@ -13,7 +13,7 @@ namespace ExtendedHubClient.Proxy
             ProxyGenerator = new ProxyGenerator(proxyBuilder ?? new DefaultProxyBuilder());
         }
 
-        public TInterface CreateProxyForInterface<TInterface>(IMethodHolder holder)
+        public TInterface CreateProxyForInterface<TInterface>(IMethodProxy holder)
             where TInterface : class
         {
             var interceptor = new TInterceptor();

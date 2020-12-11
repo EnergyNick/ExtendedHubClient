@@ -6,7 +6,7 @@ namespace ExtendedHubClient.Proxy.Interceptors
 {
     public class InterceptorWrapper : IInterceptorWrapper
     {
-        private IMethodHolder _holder;
+        private IMethodProxy _methodProxy;
         
         private readonly object _locker = new object();
 
@@ -15,22 +15,22 @@ namespace ExtendedHubClient.Proxy.Interceptors
             if(invocation == null)
                 throw new ArgumentNullException(nameof(invocation));
 
-            if(_holder == null)
-                throw new NullReferenceException($"Can't invoke without attached {nameof(IMethodHolder)}");
+            if(_methodProxy == null)
+                throw new NullReferenceException($"Can't invoke without attached {nameof(IMethodProxy)}");
             
             lock (_locker)
             {
                 var name = invocation?.Method.Name;
                 var arguments = invocation.Arguments;
-                _holder.OnMethodInvoke(name, arguments).GetAwaiter().GetResult();
+                invocation.ReturnValue = _methodProxy.OnMethodInvoke(name, arguments);
             }
         }
 
-        public void AttachMethodHolder(IMethodHolder holder)
+        public void AttachMethodHolder(IMethodProxy holder)
         {
             lock (_locker)
             {
-                _holder = holder ?? throw new ArgumentNullException(nameof(holder));
+                _methodProxy = holder ?? throw new ArgumentNullException(nameof(holder));
             }
         }
     }

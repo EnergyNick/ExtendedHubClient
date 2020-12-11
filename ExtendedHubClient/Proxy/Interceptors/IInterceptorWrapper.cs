@@ -5,6 +5,6 @@ namespace ExtendedHubClient.Proxy
 {
     public interface IInterceptorWrapper : IInterceptor
     {
-        public void AttachMethodHolder(IMethodHolder holder);
+        public void AttachMethodHolder(IMethodProxy holder);
     }
 }

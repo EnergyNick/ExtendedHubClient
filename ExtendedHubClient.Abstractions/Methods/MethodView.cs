@@ -3,22 +3,21 @@ using System.Threading.Tasks;
 
 namespace ExtendedHubClient.Abstractions.Methods
 {
+    /// <summary>
+    /// Provides basic information about the method.
+    /// </summary>
     public class MethodView : IEquatable<MethodView>
     {
+        public string Name { get; }
+        public Type[] Arguments { get; }
+        public Type ReturnValue { get; }
+
         public MethodView(string name, Type[] arguments, Type returnValue = null)
         {
             Name = name;
             Arguments = arguments;
             ReturnValue = returnValue ?? typeof(Task);
         }
-        
-        public MethodView(MethodViewDto methodViewDto)
-        : this(methodViewDto.Name, methodViewDto.Arguments, methodViewDto.ReturnValue)
-        { }
-
-        public string Name { get; }
-        public Type[] Arguments { get; }
-        public Type ReturnValue { get; }
 
         public bool Equals(MethodView other)
         {

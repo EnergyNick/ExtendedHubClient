@@ -6,20 +6,26 @@ using ExtendedHubClient.Abstractions.Methods;
 namespace ExtendedHubClient.Abstractions
 {
     /// <summary>
-    /// Interface of strongly typed SignalR client.
+    /// Interface of extended SignalR client.
     /// </summary>
-    /// <typeparam name="T">The type of client.</typeparam>
-    public interface IHubClient<out T> : IAsyncDisposable
-        where T: class
+    public interface IHubClient: IAsyncDisposable
     {
+        /// <summary>
+        /// Shows the server connection status.
+        /// </summary>
         bool IsActive { get; }
         
-        T Server { get; }
-        IMethodRegistrationManager Methods { get; }
+        ISendMethodProxy Server { get; }
+        
+        IMethodsManager Methods { get; }
         
         Task<bool> TryOpenConnection(CancellationToken cancellationToken = default);
+        
         Task CloseConnection(CancellationToken cancellationToken = default);
         
+        /// <summary>
+        /// The event, which receives the call based on the registered methods.
+        /// </summary>
         event OnHubReceiveDelegate OnCommandReceive;
     }
 }
