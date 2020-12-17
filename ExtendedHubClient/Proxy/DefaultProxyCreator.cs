@@ -2,7 +2,7 @@
 
 namespace ExtendedHubClient.Proxy
 {
-    public class DefaultProxyCreator : CastleProxyCreator<MethodProxyInterceptorWrapper>
+    public class DefaultProxyCreator : CastleProxyCreator<InterceptorWrapper>
     {
     }
 }

@@ -32,8 +32,8 @@ namespace ExtendedHubClient
                 additionalHubConfiguration,
                 logger)
         {
-            MethodProxy = new DefaultMethodProxy(Hub, Methods);
-            ProxyCreator = new DefaultTypedProxyCreator();
+            MethodProxy = new DefaultTypedMethodProxy(Hub, Methods);
+            ProxyCreator = new DefaultProxyCreator();
         }
     }
 }
