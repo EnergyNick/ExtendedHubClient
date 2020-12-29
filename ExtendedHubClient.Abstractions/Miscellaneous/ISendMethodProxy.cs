@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExtendedHubClient.Abstractions
@@ -9,5 +10,8 @@ namespace ExtendedHubClient.Abstractions
     public interface ISendMethodProxy
     {
         public Task SendCoreAsync(string methodName, object[] methodArgs, CancellationToken token = default);
+
+        public Task InvokeCoreAsync(string methodName, object[] methodArgs, Type returnType,
+            CancellationToken token = default);
     }
 }

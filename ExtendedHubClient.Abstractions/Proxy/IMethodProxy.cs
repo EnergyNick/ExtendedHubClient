@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -10,5 +11,6 @@ namespace ExtendedHubClient.Abstractions.Proxy
     public interface IMethodProxy
     {
         public Task OnMethodInvoke(string name, IEnumerable<object> arguments);
+        public Task<object> OnMethodInvokeWithReturnValue(string name, IEnumerable<object> arguments, Type returnType);
     }
 }
