@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using ExtendedHubClient.Abstractions.Proxy;
 
@@ -22,7 +23,10 @@ namespace ExtendedHubClient.Proxy.Interceptors
             {
                 var name = invocation?.Method.Name;
                 var arguments = invocation.Arguments;
-                invocation.ReturnValue = _methodProxy.OnMethodInvoke(name, arguments);
+                var returnType = invocation.MethodInvocationTarget.ReturnType;
+                invocation.ReturnValue = returnType == typeof(Task)
+                    ? _methodProxy.OnMethodInvoke(name, arguments)
+                    : _methodProxy.OnMethodInvokeWithReturnValue(name, arguments, returnType);
             }
         }
 
