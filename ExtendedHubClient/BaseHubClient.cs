@@ -36,7 +36,7 @@ namespace ExtendedHubClient
             Logger = logger ?? NullLogger.Instance;
 
             Hub = CreateAndConfigureHub(url, connectionConfiguration, additionalHubConfiguration);
-            Methods = methodRegistration(Hub, OnCommandReceive);
+            Methods = methodRegistration(Hub, CommandReceived);
         }
 
         public async Task<bool> TryOpenConnection(CancellationToken cancellationToken = default)

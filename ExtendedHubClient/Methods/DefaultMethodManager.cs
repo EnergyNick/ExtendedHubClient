@@ -101,7 +101,7 @@ namespace ExtendedHubClient.Methods
                 .Where(method =>
                 {
                     for (var i = 0; i < arguments.Count; i++)
-                        if (IsArgumentEqualToType(method.Arguments[i], arguments[i]))
+                        if (!IsArgumentEqualToType(method.Arguments[i], arguments[i]))
                             return false;
 
                     return true;
