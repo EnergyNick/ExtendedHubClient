@@ -23,7 +23,7 @@ namespace ExtendedHubClient.Proxy.Interceptors
             {
                 var name = invocation?.Method.Name;
                 var arguments = invocation.Arguments;
-                var returnType = invocation.MethodInvocationTarget.ReturnType;
+                var returnType = invocation.Method.ReturnType;
                 invocation.ReturnValue = returnType == typeof(Task)
                     ? _methodProxy.OnMethodInvoke(name, arguments)
                     : _methodProxy.OnMethodInvokeWithReturnValue(name, arguments, returnType);

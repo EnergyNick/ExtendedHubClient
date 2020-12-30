@@ -15,7 +15,7 @@ namespace ExtendedHubClient
     /// </summary>
     /// <typeparam name="TServerMethods">Interface that provides a view similar to server methods</typeparam>
     /// <typeparam name="TClientMethods">Interface that provides a view similar to the client's methods</typeparam>
-    public class TypedHubClient<TServerMethods, TClientMethods> : BaseHubClient
+    public class TypedHubClient<TServerMethods, TClientMethods> : BaseHubClient, ITypedHubClient<TServerMethods>
         where TServerMethods: class
         where TClientMethods: class
     {

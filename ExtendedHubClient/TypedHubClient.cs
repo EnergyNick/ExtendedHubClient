@@ -13,7 +13,7 @@ namespace ExtendedHubClient
     /// Provide default realization of <see cref="ITypedHubClient{TServerMethods}"/>.
     /// </summary>
     /// <typeparam name="TServerMethods">Interface that provides a view similar to server methods</typeparam>
-    public class TypedHubClient<TServerMethods> : BaseHubClient
+    public class TypedHubClient<TServerMethods> : BaseHubClient, ITypedHubClient<TServerMethods>
         where TServerMethods: class
     {
         public new TServerMethods Server => ProxyCreator.CreateProxyForInterface<TServerMethods>(MethodProxy);
