@@ -5,37 +5,35 @@ using ExtendedHubClient.Abstractions.Proxy;
 
 namespace ExtendedHubClient.Proxy.Interceptors
 {
-    public class InterceptorWrapper : IInterceptorWrapper
+    public class InterceptorWrapper : BaseInterceptorWrapper
     {
-        private IMethodProxy _methodProxy;
-        
-        private readonly object _locker = new object();
+        public InterceptorWrapper(IMethodProxy methodProxy) 
+            : base(methodProxy)
+        { }
 
-        public void Intercept(IInvocation invocation)
+        protected override async Task InterceptAsync(IInvocation invocation, Func<IInvocation, Task> proceed)
         {
             if(invocation == null)
                 throw new ArgumentNullException(nameof(invocation));
 
-            if(_methodProxy == null)
-                throw new NullReferenceException($"Can't invoke without attached {nameof(IMethodProxy)}");
-            
-            lock (_locker)
-            {
-                var name = invocation?.Method.Name;
-                var arguments = invocation.Arguments;
-                var returnType = invocation.Method.ReturnType;
-                invocation.ReturnValue = returnType == typeof(Task)
-                    ? _methodProxy.OnMethodInvoke(name, arguments)
-                    : _methodProxy.OnMethodInvokeWithReturnValue(name, arguments, returnType);
-            }
+            var name = invocation?.Method.Name;
+            var arguments = invocation.Arguments;
+            await MethodProxy.OnMethodInvoke(name, arguments).ConfigureAwait(false);
         }
 
-        public void AttachMethodHolder(IMethodProxy holder)
+        protected override async Task<TResult> InterceptAsync<TResult>(IInvocation invocation, Func<IInvocation, Task<TResult>> proceed)
         {
-            lock (_locker)
-            {
-                _methodProxy = holder ?? throw new ArgumentNullException(nameof(holder));
-            }
+            if(invocation == null)
+                throw new ArgumentNullException(nameof(invocation));
+
+            if(MethodProxy == null)
+                throw new NullReferenceException($"Can't invoke without attached {nameof(IMethodProxy)}");
+            
+            var name = invocation?.Method.Name;
+            var arguments = invocation.Arguments;
+            var returnType = invocation.Method.ReturnType;
+            return (TResult) await MethodProxy.OnMethodInvokeWithReturnValue(name, arguments, returnType)
+                .ConfigureAwait(false);
         }
     }
 }

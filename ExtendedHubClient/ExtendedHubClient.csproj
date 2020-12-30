@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Castle.Core" Version="4.4.1" />
+      <PackageReference Include="Castle.Core.AsyncInterceptor" Version="1.7.0" />
       <PackageReference Include="ExtendedHubClient.Abstractions" Version="1.1.2" />
     </ItemGroup>
 
