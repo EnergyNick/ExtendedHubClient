@@ -15,6 +15,9 @@ namespace ExtendedHubClient.Abstractions
         /// </summary>
         bool IsActive { get; }
         
+        /// <summary>
+        /// Interface for calling server methods.
+        /// </summary>
         ISendMethodProxy Server { get; }
         
         IMethodsManager Methods { get; }
