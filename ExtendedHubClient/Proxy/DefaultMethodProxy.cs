@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace ExtendedHubClient.Proxy
 {
-    public class DefaultMethodProxy : IMethodProxy
+    public class UntypedMethodProxy : IMethodProxy
     {
         private readonly HubConnection _hub;
         private readonly IMethodsManager _manager;
 
-        public DefaultMethodProxy(HubConnection hub, IMethodsManager manager)
+        public UntypedMethodProxy(HubConnection hub, IMethodsManager manager)
         {
             _hub = hub;
             _manager = manager;
