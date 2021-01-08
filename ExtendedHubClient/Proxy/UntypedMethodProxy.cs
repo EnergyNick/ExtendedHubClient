@@ -20,7 +20,7 @@ namespace ExtendedHubClient.Proxy
             _manager = manager;
         }
 
-        public async Task OnMethodInvoke(string name, IEnumerable<object> arguments)
+        public Task OnMethodInvoke(string name, IEnumerable<object> arguments)
         {
             var args = arguments?.ToArray() ?? new object[0];
 
@@ -33,12 +33,12 @@ namespace ExtendedHubClient.Proxy
                 || !(args[0] is string methodName) 
                 || !(args[1] is object[] methodArgs))
                 throw new InvalidOperationException(
-                    $"{nameof(DefaultMethodProxy)} can only work with {nameof(IHubClient)}");
+                    $"{nameof(UntypedMethodProxy)} can only work with untyped {nameof(IHubClient)}");
 
-            await _hub.SendCoreAsync(methodName, methodArgs).ConfigureAwait(false);
+            return _hub.SendCoreAsync(methodName, methodArgs);
         }
-        
-        public async Task<object> OnMethodInvokeWithReturnValue(string name, IEnumerable<object> arguments, Type returnType)
+
+        public async Task<TResult> OnMethodInvokeWithReturnValue<TResult>(string name, IEnumerable<object> arguments)
         {
             var args = arguments?.ToArray() ?? new object[0];
 
@@ -50,11 +50,12 @@ namespace ExtendedHubClient.Proxy
                 || args.Length < 3
                 || !(args[0] is string methodName) 
                 || !(args[1] is object[] methodArgs)
-                || !(args[1] is Type specialReturnType))
+                || !(args[2] is Type specialReturnType))
                 throw new InvalidOperationException(
-                    $"{nameof(DefaultMethodProxy)} can only work with {nameof(IHubClient)}");
+                    $"{nameof(UntypedMethodProxy)} can only work with untyped {nameof(IHubClient)}");
 
-            return await _hub.InvokeCoreAsync(methodName, specialReturnType, methodArgs).ConfigureAwait(false);
+            return (TResult) await _hub.InvokeCoreAsync(methodName, specialReturnType, methodArgs)
+                .ConfigureAwait(false);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ExtendedHubClient.Proxy
             _manager = manager;
         }
 
-        public async Task OnMethodInvoke(string name, IEnumerable<object> arguments)
+        public Task OnMethodInvoke(string name, IEnumerable<object> arguments)
         {
             var args = arguments?.ToArray() ?? new object[0];
 
@@ -27,10 +27,10 @@ namespace ExtendedHubClient.Proxy
                 throw new ArgumentException(
                     $"Can't call method {name} with arguments: {string.Join(", ", args.Select(x => x?.ToString()))}");
 
-            await _hub.SendCoreAsync(name, args).ConfigureAwait(false);
+            return _hub.SendCoreAsync(name, args);
         }
-        
-        public async Task<object> OnMethodInvokeWithReturnValue(string name, IEnumerable<object> arguments, Type returnType)
+
+        public Task<TResult> OnMethodInvokeWithReturnValue<TResult>(string name, IEnumerable<object> arguments)
         {
             var args = arguments?.ToArray() ?? new object[0];
 
@@ -38,7 +38,7 @@ namespace ExtendedHubClient.Proxy
                 throw new ArgumentException(
                     $"Can't call method {name} with arguments: {string.Join(", ", args.Select(x => x?.ToString()))}");
 
-            return await _hub.InvokeCoreAsync(name, returnType, args).ConfigureAwait(false);
+            return _hub.InvokeCoreAsync<TResult>(name, args);
         }
     }
 }
