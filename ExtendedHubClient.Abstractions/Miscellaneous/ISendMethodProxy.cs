@@ -17,7 +17,7 @@ namespace ExtendedHubClient.Abstractions
         /// <summary>
         /// Call method in server with return value
         /// </summary>
-        public Task InvokeCoreAsync(string methodName, object[] methodArgs, Type returnType,
+        public Task<object> InvokeCoreAsync(string methodName, object[] methodArgs, Type returnType,
             CancellationToken token = default);
     }
 }
